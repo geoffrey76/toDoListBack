@@ -15,7 +15,7 @@ client.connect((err, db) => {
   const collection = db.db("to-do-list").collection('to-do-items');
   if (err || !db) { return false; };
 
-  app.get('/api', async (req, res) => {
+  app.get('/api/', async (req, res) => {
     const response = await collection.find({}).toArray();
     res.json(response);
     
