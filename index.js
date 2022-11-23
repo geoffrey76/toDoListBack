@@ -1,6 +1,7 @@
 import express from 'express';
 import { MongoClient, ObjectId, ServerApiVersion } from 'mongodb';
 import dotenv from 'dotenv';
+import nodemailer from 'nodemailer';
 
 const app = express();
 const port = 8800;
@@ -40,3 +41,32 @@ client.connect((err, db) => {
 app.listen(port, () => {
   console.log(`server listening on port ${port}`)
 })
+
+//---------------------------- Test sending mail ------------------------
+app.post('/api/sendMail', async (req, res) => {
+  const newTaskAdded = req.body.task;
+  var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.USER_MAIL,
+      pass: process.env.GOOGLE_PASS
+    }
+  });
+  
+  var mailOptions = {
+    from: process.env.USER_MAIL,
+    to: process.env.USER_MAIL,
+    subject: 'Sending Email using Node.js',
+    text: `La nouvelle tâche ajoutée est ${newTaskAdded}`
+  };
+  
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+})
+
+
