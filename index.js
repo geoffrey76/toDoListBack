@@ -25,26 +25,7 @@ client.connect((err, db) => {
   app.post('/api/addTask', async (req, res) => {
     const task = req.body;
     await collection.insertOne(task);
-  })
-  
-  app.delete(`/api/deleteTask/:id`, async(req, res) => {
-      // const task = req.params.;
-      var id = req.params.id;
-      await collection.deleteOne({_id: ObjectId(id)});
-
-      const response = await collection.find({}).toArray();
-      
-      res.json(response);
-  })
-})
-
-app.listen(port, () => {
-  console.log(`server listening on port ${port}`)
-})
-
-//---------------------------- Test sending mail ------------------------
-app.post('/api/sendMail', async (req, res) => {
-  const newTaskAdded = req.body.task;
+    const newTaskAdded = req.body.task;
   var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -67,6 +48,48 @@ app.post('/api/sendMail', async (req, res) => {
       console.log('Email sent: ' + info.response);
     }
   });
+  })
+  
+  app.delete(`/api/deleteTask/:id`, async(req, res) => {
+      // const task = req.params.;
+      var id = req.params.id;
+      await collection.deleteOne({_id: ObjectId(id)});
+
+      const response = await collection.find({}).toArray();
+      
+      res.json(response);
+  })
 })
+
+app.listen(port, () => {
+  console.log(`server listening on port ${port}`)
+})
+
+//---------------------------- Test sending mail ------------------------
+// app.post('/api/sendMail', async (req, res) => {
+//   const newTaskAdded = req.body.task;
+//   var transporter = nodemailer.createTransport({
+//     service: 'gmail',
+//     auth: {
+//       user: process.env.USER_MAIL,
+//       pass: process.env.GOOGLE_PASS
+//     }
+//   });
+  
+//   var mailOptions = {
+//     from: process.env.USER_MAIL,
+//     to: process.env.USER_MAIL,
+//     subject: 'Sending Email using Node.js',
+//     text: `La nouvelle tâche ajoutée est ${newTaskAdded}`
+//   };
+  
+//   transporter.sendMail(mailOptions, function(error, info){
+//     if (error) {
+//       console.log(error);
+//     } else {
+//       console.log('Email sent: ' + info.response);
+//     }
+//   });
+// })
 
 
